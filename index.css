@@ -1,0 +1,116 @@
+/* General Styles */
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: linear-gradient(135deg, #ffd3e0, #f9e1d2, #a3d8d0);  /* Soft peach-pink to light teal */
+    text-align: center;
+    padding: 50px;
+    margin: 0;
+    color: #333;
+    background-size: 300% 300%;
+    animation: gradientAnimation 5s ease infinite;
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Container Styling */
+.container {
+    max-width: 500px;
+    margin: auto;
+    padding: 30px;
+    background: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    border: 2px solid #f4b6b3;  /* Light peach border */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Typography */
+h1 {
+    color: #ea2c2c;  /* Soft pinkish tone */
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1.5s ease-in-out;
+    text-transform: none;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Button & Select Styling */
+button {
+    background-color: #f62d1e;  /* Soft coral tone */
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: none;
+    padding: 15px 30px;  /* Increased padding for a larger button */
+    font-size: 1.2em;  /* Larger font size */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background-color: #f77f7f;  /* Slightly darker peach */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+
+button:active {
+    background-color: #f45d5d;  /* Even darker peach */
+    transform: translateY(1px);
+}
+
+
+select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    border-radius: 25px;
+    border: 1px solid #f4b6b3;  /* Light peach border */
+    font-size: 1em;
+    color: #555;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+select:hover {
+    background-color: #fff5f5;  /* Light peach background */
+    border-color: #f4b6b3;
+}
+
+/* Label Styling */
+label {
+    font-size: 1.2em;
+    color: #4c350f;  /* Soft teal */
+    margin-bottom: 10px;
+    display: block;
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    button {
+        padding: 15px;
+    }
+}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambu-Call | HerResq</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 id="title">Ambu-Call by HerResq</h1>
+        <label for="language" id="languageLabel">Choose Your Language:</label>
+        <select id="language" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+            <option value="bn">বাংলা</option>
+        </select>
+        <button onclick="bookAmbulance()" id="bookButton">Book an Ambulance</button>
+    </div>
+  
+
+</body>
+</html>

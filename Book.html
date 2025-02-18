@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Ambulance | Ambu-Call</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f1e2f5, #e4d0f2, #f8e1f4);
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 30px;
+            background: white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            border: 2px solid #ffb6c1;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        h1 {
+            color: #d9534f;
+            font-size: 2.5em;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        label {
+            font-size: 1.2em;
+            color: #7a6a66;
+            margin-bottom: 10px;
+            display: block;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            font-size: 1em;
+        }
+
+        .button-group button {
+            width: 45%;
+            padding: 15px;
+            margin-top: 20px;
+            background-color: #d9534f;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .button-group button:hover {
+            background-color: #c9302c;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        .button-group button:active {
+            background-color: #a52822;
+            transform: translateY(1px);
+        }
+
+        .lang-selector {
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .location-section {
+            margin-top: 20px;
+        }
+
+        .loading-animation {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #d9534f;
+        }
+
+        .detecting {
+            animation: detecting 3s infinite;
+        }
+
+        @keyframes detecting {
+            0% {
+                content: "Detecting nearest ambulance...";
+            }
+
+            50% {
+                content: "Detecting nearest ambulance..";
+            }
+
+            100% {
+                content: "Detecting nearest ambulance...";
+            }
+        }
+
+        .hospital-selection {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .hospital-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .hospital-item {
+            margin-bottom: 10px;
+            background: #f1e2f5;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .tracking-info {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Language Selection Dropdown -->
+    <div class="lang-selector">
+        <label for="language">Select Language:</label>
+        <select id="language" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+            <option value="bn">বাংলা</option>
+            
+        </select>
+    </div>
+
+    <div class="container">
+        <h1 id="header">Book an Ambulance</h1>
+        <p id="location-text">Please enter your location to continue.</p>
+
+        <!-- Location Input Section -->
+        <div class="location-section">
+            <label for="location" id="location-label">Your Location:</label>
+            <input type="text" id="location" placeholder="Enter your location" required>
+            <button onclick="useCurrentLocation()">Use My Current Location</button>
+        </div>
+
+        <!-- Buttons for Emergency and Personalized options -->
+        <div class="button-group">
+            <button onclick="startEmergency()" id="emergency-button">Emergency</button>
+            <button onclick="startPersonalized()" id="personalized-button">Personalized</button>
+        </div>
+
+        <div id="nextStep" style="display:none;"></div>
+        <div id="loading" class="loading-animation">Detecting HerResq ambulance...</div>
+
+        <!-- Hospital Selection for Personalized Option -->
+        <div id="hospital-selection" class="hospital-selection">
+            <h3>Select Your Nearest Hospital</h3>
+            <ul class="hospital-list">
+                <li class="hospital-item" onclick="selectHospital('Aakash HealthCare Hospital Dwarka Hospital')">Aakash
+                    HealthCare Hospital Dwarka</li>
+                <li class="hospital-item" onclick="selectHospital('Highland Care MultiSpeciality Hospital')">Highland
+                    Care MultiSpeciality Hospital Dwarka</li>
+                <li class="hospital-item" onclick="selectHospital('Max Super Speciality Hospital')">Max Super Speciality
+                    Hospital</li>
+                <li class="hospital-item" onclick="selectHospital('HerResq Ambulance')">HerResq Ambulance (Select to get
+                    a Surprise discount)</li>
+            </ul>
+        </div>
+
+        <!-- Fare and Confirmation -->
+        <div id="fare-selection" style="display:none;">
+            <p>Confirm your selection : <span id="hospital-name"></span>. The fare is <span id="hospital-fare"></span>
+                rupees.</p>
+            <p>If you have choose HerResq Ambulance your updated fare is 200 rupees</p>
+            <button onclick="confirmBooking()">Confirm Booking</button>
+        </div>
+
+        <!-- Tracking Info Section -->
+        <div id="tracking-info" class="tracking-info">
+            <p>Your ambulance is on the way. Estimated arrival: <span id="arrival-time">10 minutes</span>.</p>
+            <p>Driver Contact: <span id="driver-contact">+91 12345 67890</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Language Texts for Different Languages
+        const languageTexts = {
+            en: {
+                header: "Book an Ambulance",
+                locationText: "Please enter your location to continue.",
+                locationLabel: "Your Location:",
+                emergencyButton: "Emergency",
+                personalizedButton: "Personalized",
+                locationPlaceholder: "Enter your location",
+                trackingInfo: "Your ambulance is on the way. Estimated arrival: 10 minutes. Driver Contact: +91 12345 67890",
+                fare: "The estimated fare is"
+            },
+            hi: {
+                header: "एंबुलेंस बुक करें",
+                locationText: "कृपया अपनी स्थान दर्ज करें।",
+                locationLabel: "आपका स्थान:",
+                emergencyButton: "आपातकालीन",
+                personalizedButton: "व्यक्तिगत",
+                locationPlaceholder: "अपना स्थान दर्ज करें",
+                trackingInfo: "आपकी एंबुलेंस रास्ते में है। अनुमानित आगमन: 10 मिनट। ड्राइवर संपर्क: +91 12345 67890",
+                fare: "अनुमानित शुल्क है"
+            },
+
+            ta: {
+                header: "அம்புலன்ஸ் முன்பதிவு செய்யவும்",
+                locationText: "தயவுசெய்து உங்கள் இருப்பிடத்தை உள்ளிடவும்.",
+                locationLabel: "உங்கள் இருப்பிடம்:",
+                emergencyButton: "அவசரம்",
+                personalizedButton: "தனிப்பட்ட",
+                locationPlaceholder: "உங்கள் இருப்பிடத்தை உள்ளிடவும்",
+                trackingInfo: "உங்கள் அம்புலன்ஸ் வழியில் உள்ளது. மதிப்பீடு நேரம்: 10 நிமிடங்கள். ஓட்டுநர் தொடர்பு: +91 12345 67890",
+                fare: "கணிக்கப்படுள்ள கட்டணம்"
+            },
+            te: {
+                header: "అంబులెన్స్ బుక్ చేయండి",
+                locationText: "దయచేసి మీ స్థానాన్ని నమోదు చేయండి.",
+                locationLabel: "మీ స్థానం:",
+                emergencyButton: "అత్యవసరం",
+                personalizedButton: "వ్యక్తిగత",
+                locationPlaceholder: "మీ స్థానాన్ని నమోదు చేయండి",
+                trackingInfo: "మీ అంబులెన్స్ మార్గంలో ఉంది. అంచనా వచ్చిన సమయం: 10 నిమిషాలు. డ్రైవర్ సంప్రదింపు: +91 12345 67890",
+                fare: "అంచనా ఖర్చు"
+            },
+            ba: {
+                header: "অ্যাম্বুলেন্স বুক করুন",
+                locationText: "দয়া করে আপনার অবস্থান লিখুন।",
+                locationLabel: "আপনার অবস্থান:",
+                emergencyButton: "জরুরী",
+                personalizedButton: "ব্যক্তিগত",
+                locationPlaceholder: "আপনার অবস্থান লিখুন",
+                trackingInfo: "আপনার অ্যাম্বুলেন্স পথে রয়েছে। আনুমানিক আগমনের সময়: 10 মিনিট। চালকের যোগাযোগ: +91 12345 67890",
+                fare: "আনুমানিক ভাড়া"
+            }
+        
+
+        };
+
+        // Change Text Based on Selected Language
+        function changeLanguage() {
+            const language = document.getElementById('language').value;
+            const texts = languageTexts[language];
+
+            document.getElementById("header").innerText = texts.header;
+            document.getElementById("location-text").innerText = texts.locationText;
+            document.getElementById("location-label").innerText = texts.locationLabel;
+            document.getElementById("emergency-button").innerText = texts.emergencyButton;
+            document.getElementById("personalized-button").innerText = texts.personalizedButton;
+            document.getElementById("location").placeholder = texts.locationPlaceholder;
+            document.getElementById("tracking-info").innerText = texts.trackingInfo;
+        }
+
+        // Use Geolocation API to get current location
+        function useCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const location = `Latitude: ${lat}, Longitude: ${lon}`;
+                    document.getElementById('location').value = location;
+                }, function () {
+                    alert("Geolocation failed. Please enter your location manually.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser. Please enter your location manually.");
+            }
+        }
+
+        // Start Emergency Process
+        function startEmergency() {
+            document.getElementById('loading').style.display = "block";
+            setTimeout(function () {
+                document.getElementById('loading').innerHTML = "Your HerResq Ambulance is booked. It will reach soon.";
+                document.getElementById('loading').style.color = "#4CAF50";
+                document.getElementById('tracking-info').style.display = "block"; // Show tracking info after booking
+            }, 5000);
+        }
+
+        // Start Personalized Process
+        function startPersonalized() {
+            document.getElementById('hospital-selection').style.display = "block";
+            document.getElementById('nextStep').style.display = "none";
+        }
+
+        // Select Hospital from List
+        function selectHospital(hospitalName) {
+            document.getElementById('hospital-name').innerText = hospitalName;
+            document.getElementById('hospital-fare').innerText = "450"; // Example fare calculation
+
+            // Show the fare confirmation
+            document.getElementById('fare-selection').style.display = "block";
+            document.getElementById('hospital-selection').style.display = "none";
+        }
+
+        // Confirm the Booking
+        function confirmBooking() {
+            alert("Your ambulance is booked and will reach soon.we hope you like our service!!");
+
+            // Show tracking info after confirmation
+            document.getElementById('tracking-info').style.display = "block";
+        }
+    </script>
+</body>
+
+</html>
